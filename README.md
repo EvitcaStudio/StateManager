@@ -4,7 +4,7 @@ A simple state machine manager and state class that can be used in JavaScript ga
 # Usage
 Import StateManager and State:
 ```js
-import { StateManager, State } from './StateManager.js';
+import { StateManager, State } from './state-manager.min.js';
 ```
 Create your own states by extending the State class:
 ```js
@@ -40,24 +40,57 @@ function gameLoop() {
 }
 ```
 # API
-# StateManager(pStates)  
+# StateManager  
+
+## new StateManager(pStates)  
 Creates a new state machine manager.
+```js
+import { StateManager, State } from './state-manager.min.js';
+class FooState extends State {
+  // ...
+}
+class BarState extends State {
+  // ...
+}
+const stateInfo = [
+  {name: 'foo', state: new FooState()},
+  {name: 'bar', state: new BarState()}
+];
+
+const stateManager = new StateManager(stateInfo);
+// Now able to change to those states
+stateManager.setState('foo');
+stateManager.setState('bar');
+```
 
 - pStates {Object<State>} - An object containing all the states to be registered.
 ## registerState(pName, pState)  
-
 Registers a new state with the state machine.
 
 - pName {string} - The name of the state.
 - pState {State} - The state object.
+```js
+import { StateManager, State } from './state-manager.min.js';
+const stateManager = new StateManager();
+class IdleState extends State {
+  // ...
+}
+stateManager.registerState('idle', new IdleState());
+```
 
 ## setState(pName)  
 Sets the current state of the state machine.
 
 - pName {string} - The name of the state to set.
-
+```js
+stateManager.setState('idle');
+```
 ## getCurrentState()  
 Gets the current state.
+
+```js
+stateManager.getCurrentState('idle'); // 'idle'
+```
 
 ## update(pDelta)  
 Updates the current state of the state machine.
@@ -79,3 +112,6 @@ Called when exiting the state.
 
 # License
 StateManager does not have a license at this time. For licensing contact the author.
+
+# Author
+StateManager was created by doubleactii.
