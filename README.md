@@ -34,7 +34,7 @@ stateManager.setState('idle');
 Update the state machine in your game loop:
 ```js
 function gameLoop() {
-  const delta = getDeltaSinceLastFrame();
+  // caclulate delta and pass it to the state manager's update method
   stateManager.update(delta);
   requestAnimationFrame(gameLoop);
 }
@@ -89,26 +89,51 @@ stateManager.setState('idle');
 Gets the current state.
 
 ```js
-stateManager.getCurrentState('idle'); // 'idle'
+stateManager.getCurrentState(); // 'idle'
 ```
 
 ## update(pDelta)  
 Updates the current state of the state machine.
 
 - pDelta {number} - The delta time since the last update in seconds.
+```js
+stateManager.update(delta);
+```
 
 # State
 A class representing a state.
 
 ## enter()
 Called when entering the state.
+```js
+class IdleState extends State {
+  enter() {
+    console.log('Entering IdleState');
+  }
+}
+```
 
 ## update(pDelta)
-Called when executing the state.
+Called when executing the state. This is automatically called when the state manager updates.
 
 - pDelta {number} - The delta time since the last update in seconds.
+```js
+class IdleState extends State {
+  update(pDelta) {
+    console.log(`Updating IdleState with delta ${pDelta}`);
+  }
+}
+```
+
 ## exit()
 Called when exiting the state.
+```js
+class IdleState extends State {
+  exit() {
+    console.log('Exiting IdleState');
+  }
+}
+```
 
 # License
 StateManager does not have a license at this time. For licensing contact the author.
