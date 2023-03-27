@@ -4,7 +4,7 @@ A simple state machine manager and state class that can be used in JavaScript ga
 # Usage
 Import StateManager and State:
 ```js
-import { StateManager, State } from './state-manager.min.js';
+import { StateManager, State } from './state-manager.min.mjs';
 ```
 Create your own states by extending the State class:
 ```js
