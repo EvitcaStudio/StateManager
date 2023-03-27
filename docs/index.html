@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl">
+  <title data-ice="title">Home | Tween</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A tweening library."><meta property="og:type" content="website"><meta property="og:url" content="https://github.com/EvitcaStudio/StateManager#readme"><meta property="og:site_name" content="Tween"><meta property="og:title" content="Tween"><meta property="og:image" content="./evitcastudio_round_branding.png"><meta property="og:description" content="A tweening library."><meta property="og:author" content="https://github.com/doubleactii"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Tween"><meta property="twitter:description" content="A tweening library."><meta property="twitter:image" content="./evitcastudio_round_branding.png"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./" style="display: flex; align-items: center;"><img src="./image/brand_logo.png" style="width:34px;"></a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/EvitcaStudio/StateManager"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/state-manager.mjs~State.html">State</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/state-manager.mjs~StateManager.html">StateManager</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="statemanager">StateManager</h1><p>A simple state machine manager and state class that can be used in JavaScript games.</p>
+<h1 id="usage">Usage</h1><p>Import StateManager and State:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">import { StateManager, State } from &apos;./state-manager.min.mjs&apos;;</code>
+</code></pre>
+<p>Create your own states by extending the State class:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">class IdleState extends State {
+  enter() {
+    console.log(&apos;Entering IdleState&apos;);
+  }
+
+  update(pDelta) {
+    console.log(`Updating IdleState with delta ${pDelta}`);
+  }
+
+  exit() {
+    console.log(&apos;Exiting IdleState&apos;);
+  }
+}</code>
+</code></pre>
+<p>Create a new StateManager instance and register your states:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const stateManager = new StateManager();
+stateManager.registerState(&apos;idle&apos;, new IdleState());</code>
+</code></pre>
+<p>Set the initial state:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">stateManager.setState(&apos;idle&apos;);</code>
+</code></pre>
+<p>Update the state machine in your game loop:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">function gameLoop() {
+  // caclulate delta and pass it to the state manager&apos;s update method
+  stateManager.update(delta);
+  requestAnimationFrame(gameLoop);
+}</code>
+</code></pre>
+<h1 id="api">API</h1><h1 id="statemanager">StateManager</h1><h2 id="new-statemanager-pstates-">new StateManager(pStates)</h2><p>Creates a new state machine manager.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">import { StateManager, State } from &apos;./state-manager.min.js&apos;;
+class FooState extends State {
+  // ...
+}
+class BarState extends State {
+  // ...
+}
+const stateInfo = [
+  {name: &apos;foo&apos;, state: new FooState()},
+  {name: &apos;bar&apos;, state: new BarState()}
+];
+
+const stateManager = new StateManager(stateInfo);
+// Now able to change to those states
+stateManager.setState(&apos;foo&apos;);
+stateManager.setState(&apos;bar&apos;);</code>
+</code></pre>
+<ul>
+<li><p>pStates {Object&lt;State&gt;} - An object containing all the states to be registered.</p>
+<h2 id="registerstate-pname--pstate-">registerState(pName, pState)</h2><p>Registers a new state with the state machine.</p>
+</li>
+<li><p>pName {string} - The name of the state.</p>
+</li>
+<li>pState {State} - The state object.<pre><code class="lang-js"><code class="source-code prettyprint">import { StateManager, State } from &apos;./state-manager.min.js&apos;;
+const stateManager = new StateManager();
+class IdleState extends State {
+// ...
+}
+stateManager.registerState(&apos;idle&apos;, new IdleState());</code>
+</code></pre>
+</li>
+</ul>
+<h2 id="setstate-pname-">setState(pName)</h2><p>Sets the current state of the state machine.</p>
+<ul>
+<li>pName {string} - The name of the state to set.<pre><code class="lang-js"><code class="source-code prettyprint">stateManager.setState(&apos;idle&apos;);</code>
+</code></pre>
+<h2 id="getcurrentstate--">getCurrentState()</h2>Gets the current state.</li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">stateManager.getCurrentState(); // &apos;idle&apos;</code>
+</code></pre>
+<h2 id="update-pdelta-">update(pDelta)</h2><p>Updates the current state of the state machine.</p>
+<ul>
+<li>pDelta {number} - The delta time since the last update in seconds.<pre><code class="lang-js"><code class="source-code prettyprint">stateManager.update(delta);</code>
+</code></pre>
+</li>
+</ul>
+<h1 id="state">State</h1><p>A class representing a state.</p>
+<h2 id="enter--">enter()</h2><p>Called when entering the state.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">class IdleState extends State {
+  enter() {
+    console.log(&apos;Entering IdleState&apos;);
+  }
+}</code>
+</code></pre>
+<h2 id="update-pdelta-">update(pDelta)</h2><p>Called when executing the state. This is automatically called when the state manager updates.</p>
+<ul>
+<li>pDelta {number} - The delta time since the last update in seconds.<pre><code class="lang-js"><code class="source-code prettyprint">class IdleState extends State {
+update(pDelta) {
+  console.log(`Updating IdleState with delta ${pDelta}`);
+}
+}</code>
+</code></pre>
+</li>
+</ul>
+<h2 id="exit--">exit()</h2><p>Called when exiting the state.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">class IdleState extends State {
+  exit() {
+    console.log(&apos;Exiting IdleState&apos;);
+  }
+}</code>
+</code></pre>
+<h1 id="license">License</h1><p>StateManager does not have a license at this time. For licensing contact the author.</p>
+<h1 id="author">Author</h1><p>StateManager was created by doubleactii.</p>
+</div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
