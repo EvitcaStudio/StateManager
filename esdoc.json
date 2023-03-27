@@ -16,7 +16,7 @@
         "typeInference": {"enable": true},
         "brand": {
           "logo": "./evitcastudio_round_branding.png",
-          "title": "Tween",
+          "title": "State Manager",
           "description": "A tweening library.",
           "repository": "https://github.com/EvitcaStudio/StateManager",
           "author": "https://github.com/doubleactii",
