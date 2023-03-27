@@ -4,7 +4,8 @@
   "description": "A class representing a state machine manager.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-dist": "uglifyjs src/state-manager.mjs -m -c --comments --module -o dist/state-manager.min.mjs"
   },
   "repository": {
     "type": "git",
