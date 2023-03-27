@@ -17,7 +17,7 @@
         "brand": {
           "logo": "./evitcastudio_round_branding.png",
           "title": "State Manager",
-          "description": "A tweening library.",
+          "description": "A class representing a state machine manager.",
           "repository": "https://github.com/EvitcaStudio/StateManager",
           "author": "https://github.com/doubleactii",
           "image": "./evitcastudio_round_branding.png"
