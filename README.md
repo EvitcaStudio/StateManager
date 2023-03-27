@@ -45,7 +45,7 @@ function gameLoop() {
 ## new StateManager(pStates)  
 Creates a new state machine manager.
 ```js
-import { StateManager, State } from './state-manager.min.js';
+import { StateManager, State } from './state-manager.min.mjs';
 class FooState extends State {
   // ...
 }
@@ -70,7 +70,7 @@ Registers a new state with the state machine.
 - pName {string} - The name of the state.
 - pState {State} - The state object.
 ```js
-import { StateManager, State } from './state-manager.min.js';
+import { StateManager, State } from './state-manager.min.mjs';
 const stateManager = new StateManager();
 class IdleState extends State {
   // ...
