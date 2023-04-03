@@ -46,6 +46,7 @@ class StateManager {
 			if (pState instanceof State) {
 				pState.name = pName;
 				this.states[pName] = pState;
+				pState.manager = this;
 			} else {
 				console.error(`${pState} is not a valid state.`);
 			}
