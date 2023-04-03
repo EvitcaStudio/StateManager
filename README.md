@@ -103,6 +103,17 @@ stateManager.update(delta);
 # State
 A class representing a state.
 
+## manager
+Reference to the manager that is managing this state. 
+Will be **`undefined`** if the state is unregistered.
+```js
+class IdleState extends State {
+  // ...
+}
+const idle = new IdleState();
+idle.manager // manager that registered this state.
+```
+
 ## enter()
 Called when entering the state.
 ```js

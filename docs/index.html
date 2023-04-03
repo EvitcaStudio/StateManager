@@ -116,6 +116,14 @@ stateManager.registerState(&apos;idle&apos;, new IdleState());</code>
 </li>
 </ul>
 <h1 id="state">State</h1><p>A class representing a state.</p>
+<h2 id="manager">manager</h2><p>Reference to the manager that is managing this state. 
+Will be <strong><code>undefined</code></strong> if the state is unregistered.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">class IdleState extends State {
+  // ...
+}
+const idle = new IdleState();
+idle.manager // manager that registered this state.</code>
+</code></pre>
 <h2 id="enter--">enter()</h2><p>Called when entering the state.</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">class IdleState extends State {
   enter() {
