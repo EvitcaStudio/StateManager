@@ -79,7 +79,7 @@ class StateManager {
 	 * Gets the current state.
 	 */
 	getCurrentState() {
-		return this.currentState.name;
+		return this.currentState ? this.currentState.name : null;
 	}
 
 	/**
