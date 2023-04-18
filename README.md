@@ -78,12 +78,15 @@ class IdleState extends State {
 stateManager.registerState('idle', new IdleState());
 ```
 
-## setState(pName)  
+## setState(pName, pArg, pArg2, ..., pArgN)  
 Sets the current state of the state machine.
 
 - pName {string} - The name of the state to set.
+- pArg {*} - Argument(s) to pass to the enter method of the state.
 ```js
 stateManager.setState('idle');
+// or with arguments
+stateManager.setState('idle', 1, 2, 3);
 ```
 ## getCurrentState()  
 Gets the current state.
@@ -144,6 +147,25 @@ class IdleState extends State {
     console.log('Exiting IdleState');
   }
 }
+```
+
+# Arguments can be passed when setting the state
+
+```js
+import { StateManager, State } from './state-manager.min.mjs';
+const stateManager = new StateManager();
+
+class IdleState extends State {
+  enter(pParam) {
+    console.log(pParam); // 'foo';
+  }
+}
+
+const idle = new IdleState();
+stateManager.registerState('idle', idle);
+stateManager.setState('idle', 'foo');
+
+
 ```
 
 # License

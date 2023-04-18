@@ -59,8 +59,9 @@ class StateManager {
 	 * Sets the current state of the state machine.
 	 * 
 	 * @param {string} pName - The name of the state to set.
+	 * @param {*} pRest - The arguments that were passed when setting this state.
 	 */
-	setState(pName) {
+	setState(pName, ...pRest) {
 		const state = this.states[pName];
 		if (!state) {
 			console.warn(`State ${pName} not found.`);
@@ -72,7 +73,7 @@ class StateManager {
 		}
 
 		this.currentState = state;
-		this.currentState.enter();
+		this.currentState.enter(...pRest);
 	}
 
 	/**

@@ -101,9 +101,12 @@ stateManager.registerState(&apos;idle&apos;, new IdleState());</code>
 </code></pre>
 </li>
 </ul>
-<h2 id="setstate-pname-">setState(pName)</h2><p>Sets the current state of the state machine.</p>
+<h2 id="setstate-pname--parg--parg2-------pargn-">setState(pName, pArg, pArg2, ..., pArgN)</h2><p>Sets the current state of the state machine.</p>
 <ul>
-<li>pName {string} - The name of the state to set.<pre><code class="lang-js"><code class="source-code prettyprint">stateManager.setState(&apos;idle&apos;);</code>
+<li>pName {string} - The name of the state to set.</li>
+<li>pArg {*} - Argument(s) to pass to the enter method of the state.<pre><code class="lang-js"><code class="source-code prettyprint">stateManager.setState(&apos;idle&apos;);
+// or with arguments
+stateManager.setState(&apos;idle&apos;, 1, 2, 3);</code>
 </code></pre>
 <h2 id="getcurrentstate--">getCurrentState()</h2>Gets the current state.</li>
 </ul>
@@ -147,6 +150,21 @@ update(pDelta) {
     console.log(&apos;Exiting IdleState&apos;);
   }
 }</code>
+</code></pre>
+<h1 id="arguments-can-be-passed-when-setting-the-state">Arguments can be passed when setting the state</h1><pre><code class="lang-js"><code class="source-code prettyprint">import { StateManager, State } from &apos;./state-manager.min.mjs&apos;;
+const stateManager = new StateManager();
+
+class IdleState extends State {
+  enter(pParam) {
+    console.log(pParam); // &apos;foo&apos;;
+  }
+}
+
+const idle = new IdleState();
+stateManager.registerState(&apos;idle&apos;, idle);
+stateManager.setState(&apos;idle&apos;, &apos;foo&apos;);
+
+</code>
 </code></pre>
 <h1 id="license">License</h1><p>StateManager does not have a license at this time. For licensing contact the author.</p>
 <h1 id="author">Author</h1><p>StateManager was created by doubleactii.</p>
