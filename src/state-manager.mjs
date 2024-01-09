@@ -4,29 +4,32 @@
  * @class StateManager  
  * @license StateManager does not have a license at this time. For licensing contact the author
  * @author https://github.com/doubleactii
- * Copyright (c) 2023 Evitca Studio
  */
 class StateManager {
+	/**
+	 * An object containing all the registered states.
+	 * 
+	 * @private
+	 * @type {Object<string, State>}
+	 */
+	states = {};
+	/**
+	 * The current state of the state machine.
+	 * 
+	 * @private
+	 * @type {State|null}
+	 */
+	currentState = null;
+	/**
+	 * The version of the module.
+	 */
+	version = "VERSION_REPLACE_ME";
 	/**
 	 * Creates a new state machine manager.
 	 * 
 	 * @param {Object<State>} pStates - Array of state objects to register.
 	 */
 	constructor(pStates) {
-		/**
-		 * An object containing all the registered states.
-		 * 
-		 * @type {Object<string, State>}
-		 */
-		this.states = {};
-
-		/**
-		 * The current state of the state machine.
-		 * 
-		 * @type {State|null}
-		 */
-		this.currentState = null;
-
 		// Loop passed states and register them. {'name': foo, 'state': state}
 		if (typeof (pStates) === 'object' && !Array.isArray(pStates)) {
 			for (const state in pStates) {

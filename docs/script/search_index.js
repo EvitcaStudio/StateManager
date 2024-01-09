@@ -358,5 +358,11 @@ window.esdocSearchIndex = [
     "class/src/state-manager.mjs~StateManager.html#instance-method-update",
     "src/state-manager.mjs~StateManager#update",
     "method"
+  ],
+  [
+    "src/state-manager.mjs~statemanager#version",
+    "class/src/state-manager.mjs~StateManager.html#instance-member-version",
+    "src/state-manager.mjs~StateManager#version",
+    "member"
   ]
 ]
