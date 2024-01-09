@@ -1,6 +1,6 @@
 /**
  * statemanager@1.0.0 https://github.com/EvitcaStudio/StateManager
- * Compiled 1/9/2024, 10:31:22 AM UTC
+ * Compiled 1/9/2024, 10:39:51 AM UTC
  * 
  * statemanager is licensed under a MIT styled License. See LICENSE.md for more info.
  * 
