@@ -1,3 +1,4 @@
+import { Logger } from './vendor/logger.min.mjs';
 /**
  * A class representing a state machine manager.
  * 
@@ -30,6 +31,12 @@ class StateManager {
 	 * @param {Object<State>} pStates - Array of state objects to register.
 	 */
 	constructor(pStates) {
+        /** The logger module this module uses to log errors / logs.
+         * @private
+         * @type {Object}
+         */
+        this.logger = new Logger();
+        this.logger.registerType('StateManager-Module', '#ff6600');
 		// Loop passed states and register them. {'name': foo, 'state': state}
 		if (typeof (pStates) === 'object' && !Array.isArray(pStates)) {
 			for (const state in pStates) {
@@ -51,10 +58,10 @@ class StateManager {
 				this.states[pName] = pState;
 				pState.manager = this;
 			} else {
-				console.error(`${pState} is not a valid state.`);
+				this.logger.prefix('StateManager-Module').error(`${pState} is not a valid state.`);
 			}
 		} else {
-			console.error('Invalid name for state.');
+			this.logger.prefix('StateManager-Module').error('Invalid name for state.');
 		}
 	}
 
@@ -67,7 +74,7 @@ class StateManager {
 	setState(pName, ...pRest) {
 		const state = this.states[pName];
 		if (!state) {
-			console.warn(`State ${pName} not found.`);
+			this.logger.prefix('StateManager-Module').warn(`State ${pName} not found.`);
 			return;
 		}
 

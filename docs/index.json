@@ -567,7 +567,7 @@
     "__docId__": 48,
     "kind": "file",
     "name": "src/state-manager.mjs",
-    "content": "/**\r\n * A class representing a state machine manager.\r\n * \r\n * @class StateManager  \r\n * @license StateManager does not have a license at this time. For licensing contact the author\r\n * @author https://github.com/doubleactii\r\n */\r\nclass StateManager {\r\n\t/**\r\n\t * An object containing all the registered states.\r\n\t * \r\n\t * @private\r\n\t * @type {Object<string, State>}\r\n\t */\r\n\tstates = {};\r\n\t/**\r\n\t * The current state of the state machine.\r\n\t * \r\n\t * @private\r\n\t * @type {State|null}\r\n\t */\r\n\tcurrentState = null;\r\n\t/**\r\n\t * The version of the module.\r\n\t */\r\n\tversion = \"VERSION_REPLACE_ME\";\r\n\t/**\r\n\t * Creates a new state machine manager.\r\n\t * \r\n\t * @param {Object<State>} pStates - Array of state objects to register.\r\n\t */\r\n\tconstructor(pStates) {\r\n\t\t// Loop passed states and register them. {'name': foo, 'state': state}\r\n\t\tif (typeof (pStates) === 'object' && !Array.isArray(pStates)) {\r\n\t\t\tfor (const state in pStates) {\r\n\t\t\t\tthis.registerState();\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a new state with the state machine.\r\n\t * \r\n\t * @param {string} pName - The name of the state.\r\n\t * @param {State} pState - The state object.\r\n\t */\r\n\tregisterState(pName, pState) {\r\n\t\tif (typeof (pName) === 'string') {\r\n\t\t\tif (pState instanceof State) {\r\n\t\t\t\tpState.name = pName;\r\n\t\t\t\tthis.states[pName] = pState;\r\n\t\t\t\tpState.manager = this;\r\n\t\t\t} else {\r\n\t\t\t\tconsole.error(`${pState} is not a valid state.`);\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\tconsole.error('Invalid name for state.');\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Sets the current state of the state machine.\r\n\t * \r\n\t * @param {string} pName - The name of the state to set.\r\n\t * @param {*} pRest - The arguments that were passed when setting this state.\r\n\t */\r\n\tsetState(pName, ...pRest) {\r\n\t\tconst state = this.states[pName];\r\n\t\tif (!state) {\r\n\t\t\tconsole.warn(`State ${pName} not found.`);\r\n\t\t\treturn;\r\n\t\t}\r\n\r\n\t\tif (this.currentState) {\r\n\t\t\tthis.currentState.exit();\r\n\t\t}\r\n\r\n\t\tthis.currentState = state;\r\n\t\tthis.currentState.enter(...pRest);\r\n\t}\r\n\r\n\t/**\r\n\t * Gets the current state.\r\n\t */\r\n\tgetCurrentState() {\r\n\t\treturn this.currentState ? this.currentState.name : null;\r\n\t}\r\n\r\n\t/**\r\n\t * Updates the current state of the state machine.\r\n\t * \r\n\t * @param {number} pDelta - The delta time since the last update in seconds.\r\n\t */\r\n\tupdate(pDelta) {\r\n\t\tif (this.currentState) {\r\n\t\t\tthis.currentState.update(pDelta);\r\n\t\t}\r\n\t}\r\n}\r\n\r\n/**\r\n * A class representing a state.\r\n */\r\nclass State {\r\n\t/**\r\n\t * Called when entering the state.\r\n\t */\r\n\tenter() { }\r\n\r\n\t/**\r\n\t * Called when executing the state.\r\n\t * \r\n\t * @param {number} pDelta - The delta time since the last update in seconds.\r\n\t */\r\n\tupdate(pDelta) { }\r\n\r\n\t/**\r\n\t * Called when exiting the state.\r\n\t */\r\n\texit() { }\r\n}\r\n\r\nexport { StateManager, State };",
+    "content": "import { Logger } from './vendor/logger.min.mjs';\r\n/**\r\n * A class representing a state machine manager.\r\n * \r\n * @class StateManager  \r\n * @license StateManager does not have a license at this time. For licensing contact the author\r\n * @author https://github.com/doubleactii\r\n */\r\nclass StateManager {\r\n\t/**\r\n\t * An object containing all the registered states.\r\n\t * \r\n\t * @private\r\n\t * @type {Object<string, State>}\r\n\t */\r\n\tstates = {};\r\n\t/**\r\n\t * The current state of the state machine.\r\n\t * \r\n\t * @private\r\n\t * @type {State|null}\r\n\t */\r\n\tcurrentState = null;\r\n\t/**\r\n\t * The version of the module.\r\n\t */\r\n\tversion = \"VERSION_REPLACE_ME\";\r\n\t/**\r\n\t * Creates a new state machine manager.\r\n\t * \r\n\t * @param {Object<State>} pStates - Array of state objects to register.\r\n\t */\r\n\tconstructor(pStates) {\r\n        /** The logger module this module uses to log errors / logs.\r\n         * @private\r\n         * @type {Object}\r\n         */\r\n        this.logger = new Logger();\r\n        this.logger.registerType('StateManager-Module', '#ff6600');\r\n\t\t// Loop passed states and register them. {'name': foo, 'state': state}\r\n\t\tif (typeof (pStates) === 'object' && !Array.isArray(pStates)) {\r\n\t\t\tfor (const state in pStates) {\r\n\t\t\t\tthis.registerState();\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a new state with the state machine.\r\n\t * \r\n\t * @param {string} pName - The name of the state.\r\n\t * @param {State} pState - The state object.\r\n\t */\r\n\tregisterState(pName, pState) {\r\n\t\tif (typeof (pName) === 'string') {\r\n\t\t\tif (pState instanceof State) {\r\n\t\t\t\tpState.name = pName;\r\n\t\t\t\tthis.states[pName] = pState;\r\n\t\t\t\tpState.manager = this;\r\n\t\t\t} else {\r\n\t\t\t\tthis.logger.prefix('StateManager-Module').error(`${pState} is not a valid state.`);\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\tthis.logger.prefix('StateManager-Module').error('Invalid name for state.');\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Sets the current state of the state machine.\r\n\t * \r\n\t * @param {string} pName - The name of the state to set.\r\n\t * @param {*} pRest - The arguments that were passed when setting this state.\r\n\t */\r\n\tsetState(pName, ...pRest) {\r\n\t\tconst state = this.states[pName];\r\n\t\tif (!state) {\r\n\t\t\tthis.logger.prefix('StateManager-Module').warn(`State ${pName} not found.`);\r\n\t\t\treturn;\r\n\t\t}\r\n\r\n\t\tif (this.currentState) {\r\n\t\t\tthis.currentState.exit();\r\n\t\t}\r\n\r\n\t\tthis.currentState = state;\r\n\t\tthis.currentState.enter(...pRest);\r\n\t}\r\n\r\n\t/**\r\n\t * Gets the current state.\r\n\t */\r\n\tgetCurrentState() {\r\n\t\treturn this.currentState ? this.currentState.name : null;\r\n\t}\r\n\r\n\t/**\r\n\t * Updates the current state of the state machine.\r\n\t * \r\n\t * @param {number} pDelta - The delta time since the last update in seconds.\r\n\t */\r\n\tupdate(pDelta) {\r\n\t\tif (this.currentState) {\r\n\t\t\tthis.currentState.update(pDelta);\r\n\t\t}\r\n\t}\r\n}\r\n\r\n/**\r\n * A class representing a state.\r\n */\r\nclass State {\r\n\t/**\r\n\t * Called when entering the state.\r\n\t */\r\n\tenter() { }\r\n\r\n\t/**\r\n\t * Called when executing the state.\r\n\t * \r\n\t * @param {number} pDelta - The delta time since the last update in seconds.\r\n\t */\r\n\tupdate(pDelta) { }\r\n\r\n\t/**\r\n\t * Called when exiting the state.\r\n\t */\r\n\texit() { }\r\n}\r\n\r\nexport { StateManager, State };",
     "static": true,
     "longname": "C:/Users/jared/Documents/Github/StateManager/src/state-manager.mjs",
     "access": "public",
@@ -586,7 +586,7 @@
     "importPath": "statemanager/src/state-manager.mjs",
     "importStyle": "{StateManager}",
     "description": "A class representing a state machine manager.",
-    "lineNumber": 8,
+    "lineNumber": 9,
     "unknown": [
       {
         "tagName": "@class",
@@ -612,7 +612,7 @@
     "longname": "src/state-manager.mjs~StateManager#states",
     "access": "private",
     "description": "An object containing all the registered states.",
-    "lineNumber": 15,
+    "lineNumber": 16,
     "type": {
       "nullable": null,
       "types": [
@@ -631,7 +631,7 @@
     "longname": "src/state-manager.mjs~StateManager#currentState",
     "access": "private",
     "description": "The current state of the state machine.",
-    "lineNumber": 22,
+    "lineNumber": 23,
     "type": {
       "nullable": null,
       "types": [
@@ -651,7 +651,7 @@
     "longname": "src/state-manager.mjs~StateManager#version",
     "access": "public",
     "description": "The version of the module.",
-    "lineNumber": 26,
+    "lineNumber": 27,
     "type": {
       "types": [
         "*"
@@ -669,7 +669,7 @@
     "longname": "src/state-manager.mjs~StateManager#constructor",
     "access": "public",
     "description": "Creates a new state machine manager.",
-    "lineNumber": 32,
+    "lineNumber": 33,
     "params": [
       {
         "nullable": null,
@@ -685,6 +685,25 @@
   },
   {
     "__docId__": 54,
+    "kind": "member",
+    "name": "logger",
+    "memberof": "src/state-manager.mjs~StateManager",
+    "static": false,
+    "longname": "src/state-manager.mjs~StateManager#logger",
+    "access": "private",
+    "description": "The logger module this module uses to log errors / logs.",
+    "lineNumber": 38,
+    "type": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 55,
     "kind": "method",
     "name": "registerState",
     "memberof": "src/state-manager.mjs~StateManager",
@@ -694,7 +713,7 @@
     "longname": "src/state-manager.mjs~StateManager#registerState",
     "access": "public",
     "description": "Registers a new state with the state machine.",
-    "lineNumber": 47,
+    "lineNumber": 54,
     "params": [
       {
         "nullable": null,
@@ -720,7 +739,7 @@
     "return": null
   },
   {
-    "__docId__": 55,
+    "__docId__": 56,
     "kind": "method",
     "name": "setState",
     "memberof": "src/state-manager.mjs~StateManager",
@@ -730,7 +749,7 @@
     "longname": "src/state-manager.mjs~StateManager#setState",
     "access": "public",
     "description": "Sets the current state of the state machine.",
-    "lineNumber": 67,
+    "lineNumber": 74,
     "params": [
       {
         "nullable": null,
@@ -756,7 +775,7 @@
     "return": null
   },
   {
-    "__docId__": 57,
+    "__docId__": 58,
     "kind": "method",
     "name": "getCurrentState",
     "memberof": "src/state-manager.mjs~StateManager",
@@ -766,7 +785,7 @@
     "longname": "src/state-manager.mjs~StateManager#getCurrentState",
     "access": "public",
     "description": "Gets the current state.",
-    "lineNumber": 85,
+    "lineNumber": 92,
     "params": [],
     "return": {
       "types": [
@@ -775,7 +794,7 @@
     }
   },
   {
-    "__docId__": 58,
+    "__docId__": 59,
     "kind": "method",
     "name": "update",
     "memberof": "src/state-manager.mjs~StateManager",
@@ -785,7 +804,7 @@
     "longname": "src/state-manager.mjs~StateManager#update",
     "access": "public",
     "description": "Updates the current state of the state machine.",
-    "lineNumber": 94,
+    "lineNumber": 101,
     "params": [
       {
         "nullable": null,
@@ -801,7 +820,7 @@
     "return": null
   },
   {
-    "__docId__": 59,
+    "__docId__": 60,
     "kind": "class",
     "name": "State",
     "memberof": "src/state-manager.mjs",
@@ -812,11 +831,11 @@
     "importPath": "statemanager/src/state-manager.mjs",
     "importStyle": "{State}",
     "description": "A class representing a state.",
-    "lineNumber": 104,
+    "lineNumber": 111,
     "interface": false
   },
   {
-    "__docId__": 60,
+    "__docId__": 61,
     "kind": "method",
     "name": "enter",
     "memberof": "src/state-manager.mjs~State",
@@ -826,12 +845,12 @@
     "longname": "src/state-manager.mjs~State#enter",
     "access": "public",
     "description": "Called when entering the state.",
-    "lineNumber": 108,
+    "lineNumber": 115,
     "params": [],
     "return": null
   },
   {
-    "__docId__": 61,
+    "__docId__": 62,
     "kind": "method",
     "name": "update",
     "memberof": "src/state-manager.mjs~State",
@@ -841,7 +860,7 @@
     "longname": "src/state-manager.mjs~State#update",
     "access": "public",
     "description": "Called when executing the state.",
-    "lineNumber": 115,
+    "lineNumber": 122,
     "params": [
       {
         "nullable": null,
@@ -857,7 +876,7 @@
     "return": null
   },
   {
-    "__docId__": 62,
+    "__docId__": 63,
     "kind": "method",
     "name": "exit",
     "memberof": "src/state-manager.mjs~State",
@@ -867,9 +886,648 @@
     "longname": "src/state-manager.mjs~State#exit",
     "access": "public",
     "description": "Called when exiting the state.",
-    "lineNumber": 120,
+    "lineNumber": 127,
     "params": [],
     "return": null
+  },
+  {
+    "__docId__": 64,
+    "kind": "file",
+    "name": "src/vendor/logger.min.mjs",
+    "content": "/**\r\n * logger@1.0.0 https://github.com/EvitcaStudio/Logger\r\n * Compiled 1/9/2024, 9:29:22 AM UTC\r\n * \r\n * logger is licensed under a MIT styled License. See LICENSE.md for more info.\r\n * \r\n * Copyright 2024, Evitca Studio, All Rights Reserved\r\n */\r\nvar t={d:(s,e)=>{for(var i in e)t.o(e,i)&&!t.o(s,i)&&Object.defineProperty(s,i,{enumerable:!0,get:e[i]})},o:(t,s)=>Object.prototype.hasOwnProperty.call(t,s)},s={};t.d(s,{Y:()=>e});class e{constructor(t){this.RESET=\"\u001b[0m\",this.BRIGHT=\"\u001b[1m\",this.DIM=\"\u001b[2m\",this.UNDERSCORE=\"\u001b[4m\",this.BLINK=\"\u001b[5m\",this.REVERSE=\"\u001b[7m\",this.HIDDEN=\"\u001b[8m\",this.FG_BLACK=\"\u001b[30m\",this.FG_RED=\"\u001b[31m\",this.FG_GREEN=\"\u001b[32m\",this.FG_YELLOW=\"\u001b[33m\",this.FG_BLUE=\"\u001b[34m\",this.FG_MAGENTA=\"\u001b[35m\",this.FG_CYAN=\"\u001b[36m\",this.FG_WHITE=\"\u001b[37m\",this.FG_GRAY=\"\u001b[90m\",this.BG_BLACK=\"\u001b[40m\",this.BG_RED=\"\u001b[41m\",this.BG_GREEN=\"\u001b[42m\",this.BG_YELLOW=\"\u001b[43m\",this.BG_BLUE=\"\u001b[44m\",this.BG_MAGENTA=\"\u001b[45m\",this.BG_CYAN=\"\u001b[46m\",this.BG_WHITE=\"\u001b[47m\",this.BG_GRAY=\"\u001b[100m\",this.TYPE_SPACER_LENGTH=13,this.types={default:this.FG_WHITE},this.currentType=\"\",this.SPACE_CHAR=\" \",this.FG_COLORS={};for(let t=0;t<=255;t++)this.FG_COLORS[t]=\"\u001b[38;5;\"+t+\"m\";this.BG_COLORS={};for(let t=0;t<=255;t++)this.BG_COLORS[t]=\"\u001b[48;5;\"+t+\"m\";Array.isArray(t)&&this.registerTypes(t)}prefix(t){return\"string\"==typeof t&&(this.currentType=t),this}message(s=\"log\",...e){var i=this.currentType||\"\";if(0===i.length)console[s](...e);else{var r=i.length>=this.TYPE_SPACER_LENGTH;let t=this.types[i.toLowerCase()]?this.types[i.toLowerCase()]:this.types.default;var h=t.includes(\"\u001b\");h||(t=\"color: \"+t),!globalThis.window||h?console[s](t+i+this.SPACE_CHAR.repeat(Math.max(this.TYPE_SPACER_LENGTH-i.length,r?1:0))+\"|\"+this.RESET,...e):console[s](\"%c\"+i+this.SPACE_CHAR.repeat(Math.max(this.TYPE_SPACER_LENGTH-i.length,r?1:0))+\"|\",t,...e)}this.currentType=\"\"}log(...t){this.message(\"log\",...t)}info(...t){this.message(\"info\",...t)}error(...t){this.message(\"error\",...t)}warn(...t){this.message(\"warn\",...t)}assert(...t){console.assert(...t)}debug(...t){this.message(\"debug\",...t)}count(t){console.count(t)}countReset(t){console.countReset(t)}table(t,s){console.table(t,s)}time(t){this.message(\"time\",t)}timeLog(t){this.message(\"timeLog\",t)}timeEnd(t){this.message(\"timeEnd\",t)}trace(...t){this.message(\"trace\",...t)}group(t){this.message(\"group\",t)}groupCollapsed(t){console.groupCollapsed(t)}groupEnd(){console.groupEnd()}clear(){console.clear()}registerType(t,s){this.types[t]||\"string\"==typeof t&&\"string\"==typeof s&&(this.types[t.toLowerCase()]=s)}registerTypes(s){if(Array.isArray(s))for(let t=0;t<s.length;t++)this.registerType(s[t].type,s[t].ansi)}unregisterType(t){this.types[t]&&delete this.types[t]}}var i=s.Y;export{i as Logger};",
+    "static": true,
+    "longname": "C:/Users/jared/Documents/Github/StateManager/src/vendor/logger.min.mjs",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 65,
+    "kind": "variable",
+    "name": "t",
+    "memberof": "src/vendor/logger.min.mjs",
+    "static": true,
+    "longname": "src/vendor/logger.min.mjs~t",
+    "access": "public",
+    "export": false,
+    "importPath": "statemanager/src/vendor/logger.min.mjs",
+    "importStyle": null,
+    "description": "logger@1.0.0 https://github.com/EvitcaStudio/Logger\nCompiled 1/9/2024, 9:29:22 AM UTC\n\nlogger is licensed under a MIT styled License. See LICENSE.md for more info.\n\nCopyright 2024, Evitca Studio, All Rights Reserved",
+    "lineNumber": 9,
+    "type": {
+      "types": [
+        "{\"d\": *, \"o\": *}"
+      ]
+    }
+  },
+  {
+    "__docId__": 66,
+    "kind": "class",
+    "name": "e",
+    "memberof": "src/vendor/logger.min.mjs",
+    "static": true,
+    "longname": "src/vendor/logger.min.mjs~e",
+    "access": "public",
+    "export": false,
+    "importPath": "statemanager/src/vendor/logger.min.mjs",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "interface": false
+  },
+  {
+    "__docId__": 67,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#constructor",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true
+  },
+  {
+    "__docId__": 68,
+    "kind": "member",
+    "name": "BG_COLORS",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#BG_COLORS",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "type": {
+      "types": [
+        "{}"
+      ]
+    }
+  },
+  {
+    "__docId__": 69,
+    "kind": "method",
+    "name": "prefix",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#prefix",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "t",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 70,
+    "kind": "method",
+    "name": "message",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#message",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "s",
+        "optional": true,
+        "types": [
+          "string"
+        ],
+        "defaultRaw": "log",
+        "defaultValue": "log"
+      },
+      {
+        "name": "e",
+        "types": [
+          "...*"
+        ],
+        "spread": true
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 71,
+    "kind": "member",
+    "name": "currentType",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#currentType",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    }
+  },
+  {
+    "__docId__": 72,
+    "kind": "method",
+    "name": "log",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#log",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "t",
+        "types": [
+          "...*"
+        ],
+        "spread": true
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 73,
+    "kind": "method",
+    "name": "info",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#info",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "t",
+        "types": [
+          "...*"
+        ],
+        "spread": true
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 74,
+    "kind": "method",
+    "name": "error",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#error",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "t",
+        "types": [
+          "...*"
+        ],
+        "spread": true
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 75,
+    "kind": "method",
+    "name": "warn",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#warn",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "t",
+        "types": [
+          "...*"
+        ],
+        "spread": true
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 76,
+    "kind": "method",
+    "name": "assert",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#assert",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "t",
+        "types": [
+          "...*"
+        ],
+        "spread": true
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 77,
+    "kind": "method",
+    "name": "debug",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#debug",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "t",
+        "types": [
+          "...*"
+        ],
+        "spread": true
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 78,
+    "kind": "method",
+    "name": "count",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#count",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "t",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 79,
+    "kind": "method",
+    "name": "countReset",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#countReset",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "t",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 80,
+    "kind": "method",
+    "name": "table",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#table",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "t",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "s",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 81,
+    "kind": "method",
+    "name": "time",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#time",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "t",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 82,
+    "kind": "method",
+    "name": "timeLog",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#timeLog",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "t",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 83,
+    "kind": "method",
+    "name": "timeEnd",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#timeEnd",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "t",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 84,
+    "kind": "method",
+    "name": "trace",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#trace",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "t",
+        "types": [
+          "...*"
+        ],
+        "spread": true
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 85,
+    "kind": "method",
+    "name": "group",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#group",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "t",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 86,
+    "kind": "method",
+    "name": "groupCollapsed",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#groupCollapsed",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "t",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 87,
+    "kind": "method",
+    "name": "groupEnd",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#groupEnd",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [],
+    "return": null
+  },
+  {
+    "__docId__": 88,
+    "kind": "method",
+    "name": "clear",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#clear",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [],
+    "return": null
+  },
+  {
+    "__docId__": 89,
+    "kind": "method",
+    "name": "registerType",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#registerType",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "t",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "s",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 90,
+    "kind": "method",
+    "name": "registerTypes",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#registerTypes",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "s",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 91,
+    "kind": "method",
+    "name": "unregisterType",
+    "memberof": "src/vendor/logger.min.mjs~e",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/vendor/logger.min.mjs~e#unregisterType",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "t",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 92,
+    "kind": "variable",
+    "name": "i",
+    "memberof": "src/vendor/logger.min.mjs",
+    "static": true,
+    "longname": "src/vendor/logger.min.mjs~i",
+    "access": "public",
+    "export": false,
+    "importPath": "statemanager/src/vendor/logger.min.mjs",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
   },
   {
     "kind": "index",

@@ -31,12 +31,16 @@
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/state-manager.mjs~State.html">State</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/state-manager.mjs~StateManager.html">StateManager</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#vendor">vendor</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/vendor/logger.min.mjs~e.html">e</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-i">i</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-t">t</a></span></span></li>
 </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/state-manager.mjs</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { Logger } from &apos;./vendor/logger.min.mjs&apos;;
+/**
  * A class representing a state machine manager.
  * 
  * @class StateManager  
@@ -68,6 +72,12 @@ class StateManager {
 	 * @param {Object&lt;State&gt;} pStates - Array of state objects to register.
 	 */
 	constructor(pStates) {
+        /** The logger module this module uses to log errors / logs.
+         * @private
+         * @type {Object}
+         */
+        this.logger = new Logger();
+        this.logger.registerType(&apos;StateManager-Module&apos;, &apos;#ff6600&apos;);
 		// Loop passed states and register them. {&apos;name&apos;: foo, &apos;state&apos;: state}
 		if (typeof (pStates) === &apos;object&apos; &amp;&amp; !Array.isArray(pStates)) {
 			for (const state in pStates) {
@@ -89,10 +99,10 @@ class StateManager {
 				this.states[pName] = pState;
 				pState.manager = this;
 			} else {
-				console.error(`${pState} is not a valid state.`);
+				this.logger.prefix(&apos;StateManager-Module&apos;).error(`${pState} is not a valid state.`);
 			}
 		} else {
-			console.error(&apos;Invalid name for state.&apos;);
+			this.logger.prefix(&apos;StateManager-Module&apos;).error(&apos;Invalid name for state.&apos;);
 		}
 	}
 
@@ -105,7 +115,7 @@ class StateManager {
 	setState(pName, ...pRest) {
 		const state = this.states[pName];
 		if (!state) {
-			console.warn(`State ${pName} not found.`);
+			this.logger.prefix(&apos;StateManager-Module&apos;).warn(`State ${pName} not found.`);
 			return;
 		}
 
