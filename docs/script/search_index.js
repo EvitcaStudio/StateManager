@@ -1,14 +1,14 @@
 window.esdocSearchIndex = [
   [
-    "statemanager/src/state-manager.mjs~state",
+    "state-manager~state",
     "class/src/state-manager.mjs~State.html",
-    "<span>State</span> <span class=\"search-result-import-path\">statemanager/src/state-manager.mjs</span>",
+    "<span>State</span> <span class=\"search-result-import-path\">state-manager</span>",
     "class"
   ],
   [
-    "statemanager/src/state-manager.mjs~statemanager",
+    "state-manager~statemanager",
     "class/src/state-manager.mjs~StateManager.html",
-    "<span>StateManager</span> <span class=\"search-result-import-path\">statemanager/src/state-manager.mjs</span>",
+    "<span>StateManager</span> <span class=\"search-result-import-path\">state-manager</span>",
     "class"
   ],
   [

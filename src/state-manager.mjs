@@ -1,11 +1,5 @@
 import { Logger } from './vendor/logger.min.mjs';
-/**
- * A class representing a state machine manager.
- * 
- * @class StateManager  
- * @license StateManager does not have a license at this time. For licensing contact the author
- * @author https://github.com/doubleactii
- */
+
 class StateManager {
 	/**
 	 * An object containing all the registered states.

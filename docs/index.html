@@ -36,8 +36,17 @@
 </nav>
 
 <div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="statemanager">StateManager</h1><p>A simple state machine manager and state class that can be used in JavaScript games.</p>
+<h2 id="installation">Installation</h2><h3 id="es-module">ES Module</h3><pre><code class="lang-js"><code class="source-code prettyprint">import { StateManager, State } from &apos;./state-manager.mjs&apos;;</code>
+</code></pre>
+<h3 id="iife--immediately-invoked-function-expression-">IIFE (Immediately Invoked Function Expression)</h3><pre><code class="lang-js"><code class="source-code prettyprint">&lt;script src=&quot;state-manager.js&quot;&gt;&lt;/script&gt;;
+// ...
+window.StateManagerBundle.StateManager;
+window.StateManagerBundle.State;</code>
+</code></pre>
+<h3 id="commonjs--cjs--module">CommonJS (CJS) Module</h3><pre><code class="lang-js"><code class="source-code prettyprint">const { StateManager, State } = require(&apos;./state-manager.cjs.js&apos;);</code>
+</code></pre>
 <h1 id="usage">Usage</h1><p>Import StateManager and State:</p>
-<pre><code class="lang-js"><code class="source-code prettyprint">import { StateManager, State } from &apos;./state-manager.min.mjs&apos;;</code>
+<pre><code class="lang-js"><code class="source-code prettyprint">import { StateManager, State } from &apos;./state-manager.mjs&apos;;</code>
 </code></pre>
 <p>Create your own states by extending the State class:</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">class IdleState extends State {
@@ -69,7 +78,7 @@ stateManager.registerState(&apos;idle&apos;, new IdleState());</code>
 }</code>
 </code></pre>
 <h1 id="api">API</h1><h1 id="statemanager">StateManager</h1><h2 id="new-statemanager-pstates-">new StateManager(pStates)</h2><p>Creates a new state machine manager.</p>
-<pre><code class="lang-js"><code class="source-code prettyprint">import { StateManager, State } from &apos;./state-manager.min.mjs&apos;;
+<pre><code class="lang-js"><code class="source-code prettyprint">import { StateManager, State } from &apos;./state-manager.mjs&apos;;
 class FooState extends State {
   // ...
 }
@@ -92,7 +101,7 @@ stateManager.setState(&apos;bar&apos;);</code>
 </li>
 <li><p>pName {string} - The name of the state.</p>
 </li>
-<li>pState {State} - The state object.<pre><code class="lang-js"><code class="source-code prettyprint">import { StateManager, State } from &apos;./state-manager.min.mjs&apos;;
+<li>pState {State} - The state object.<pre><code class="lang-js"><code class="source-code prettyprint">import { StateManager, State } from &apos;./state-manager.mjs&apos;;
 const stateManager = new StateManager();
 class IdleState extends State {
 // ...
@@ -151,7 +160,7 @@ update(pDelta) {
   }
 }</code>
 </code></pre>
-<h1 id="arguments-can-be-passed-when-setting-the-state">Arguments can be passed when setting the state</h1><pre><code class="lang-js"><code class="source-code prettyprint">import { StateManager, State } from &apos;./state-manager.min.mjs&apos;;
+<h1 id="arguments-can-be-passed-when-setting-the-state">Arguments can be passed when setting the state</h1><pre><code class="lang-js"><code class="source-code prettyprint">import { StateManager, State } from &apos;./state-manager.mjs&apos;;
 const stateManager = new StateManager();
 
 class IdleState extends State {
@@ -166,8 +175,8 @@ stateManager.setState(&apos;idle&apos;, &apos;foo&apos;);
 
 </code>
 </code></pre>
-<h1 id="license">License</h1><p>StateManager does not have a license at this time. For licensing contact the author.</p>
 <h1 id="author">Author</h1><p>StateManager was created by doubleactii.</p>
+<h3 id="global-dependency">Global Dependency</h3><p>StateManager relies on the <code>VYLO</code> variable being globally accessible.</p>
 </div>
 </div>
 

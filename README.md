@@ -1,10 +1,33 @@
 # StateManager
 A simple state machine manager and state class that can be used in JavaScript games.
 
+## Installation
+
+### ES Module
+
+```js
+import { StateManager, State } from './state-manager.mjs';
+```
+
+### IIFE (Immediately Invoked Function Expression)
+
+```js
+<script src="state-manager.js"></script>;
+// ...
+window.StateManagerBundle.StateManager;
+window.StateManagerBundle.State;
+```
+
+### CommonJS (CJS) Module
+
+```js
+const { StateManager, State } = require('./state-manager.cjs.js');
+```
+
 # Usage
 Import StateManager and State:
 ```js
-import { StateManager, State } from './state-manager.min.mjs';
+import { StateManager, State } from './state-manager.mjs';
 ```
 Create your own states by extending the State class:
 ```js
@@ -45,7 +68,7 @@ function gameLoop() {
 ## new StateManager(pStates)  
 Creates a new state machine manager.
 ```js
-import { StateManager, State } from './state-manager.min.mjs';
+import { StateManager, State } from './state-manager.mjs';
 class FooState extends State {
   // ...
 }
@@ -70,7 +93,7 @@ Registers a new state with the state machine.
 - pName {string} - The name of the state.
 - pState {State} - The state object.
 ```js
-import { StateManager, State } from './state-manager.min.mjs';
+import { StateManager, State } from './state-manager.mjs';
 const stateManager = new StateManager();
 class IdleState extends State {
   // ...
@@ -152,7 +175,7 @@ class IdleState extends State {
 # Arguments can be passed when setting the state
 
 ```js
-import { StateManager, State } from './state-manager.min.mjs';
+import { StateManager, State } from './state-manager.mjs';
 const stateManager = new StateManager();
 
 class IdleState extends State {
@@ -168,8 +191,9 @@ stateManager.setState('idle', 'foo');
 
 ```
 
-# License
-StateManager does not have a license at this time. For licensing contact the author.
-
 # Author
 StateManager was created by doubleactii.
+
+### Global Dependency
+
+StateManager relies on the `VYLO` variable being globally accessible.

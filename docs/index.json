@@ -567,7 +567,7 @@
     "__docId__": 48,
     "kind": "file",
     "name": "src/state-manager.mjs",
-    "content": "import { Logger } from './vendor/logger.min.mjs';\r\n/**\r\n * A class representing a state machine manager.\r\n * \r\n * @class StateManager  \r\n * @license StateManager does not have a license at this time. For licensing contact the author\r\n * @author https://github.com/doubleactii\r\n */\r\nclass StateManager {\r\n\t/**\r\n\t * An object containing all the registered states.\r\n\t * \r\n\t * @private\r\n\t * @type {Object<string, State>}\r\n\t */\r\n\tstates = {};\r\n\t/**\r\n\t * The current state of the state machine.\r\n\t * \r\n\t * @private\r\n\t * @type {State|null}\r\n\t */\r\n\tcurrentState = null;\r\n\t/**\r\n\t * The version of the module.\r\n\t */\r\n\tversion = \"VERSION_REPLACE_ME\";\r\n\t/**\r\n\t * Creates a new state machine manager.\r\n\t * \r\n\t * @param {Object<State>} pStates - Array of state objects to register.\r\n\t */\r\n\tconstructor(pStates) {\r\n        /** The logger module this module uses to log errors / logs.\r\n         * @private\r\n         * @type {Object}\r\n         */\r\n        this.logger = new Logger();\r\n        this.logger.registerType('StateManager-Module', '#ff6600');\r\n\t\t// Loop passed states and register them. {'name': foo, 'state': state}\r\n\t\tif (typeof (pStates) === 'object' && !Array.isArray(pStates)) {\r\n\t\t\tfor (const state in pStates) {\r\n\t\t\t\tthis.registerState();\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a new state with the state machine.\r\n\t * \r\n\t * @param {string} pName - The name of the state.\r\n\t * @param {State} pState - The state object.\r\n\t */\r\n\tregisterState(pName, pState) {\r\n\t\tif (typeof (pName) === 'string') {\r\n\t\t\tif (pState instanceof State) {\r\n\t\t\t\tpState.name = pName;\r\n\t\t\t\tthis.states[pName] = pState;\r\n\t\t\t\tpState.manager = this;\r\n\t\t\t} else {\r\n\t\t\t\tthis.logger.prefix('StateManager-Module').error(`${pState} is not a valid state.`);\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\tthis.logger.prefix('StateManager-Module').error('Invalid name for state.');\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Sets the current state of the state machine.\r\n\t * \r\n\t * @param {string} pName - The name of the state to set.\r\n\t * @param {*} pRest - The arguments that were passed when setting this state.\r\n\t */\r\n\tsetState(pName, ...pRest) {\r\n\t\tconst state = this.states[pName];\r\n\t\tif (!state) {\r\n\t\t\tthis.logger.prefix('StateManager-Module').warn(`State ${pName} not found.`);\r\n\t\t\treturn;\r\n\t\t}\r\n\r\n\t\tif (this.currentState) {\r\n\t\t\tthis.currentState.exit();\r\n\t\t}\r\n\r\n\t\tthis.currentState = state;\r\n\t\tthis.currentState.enter(...pRest);\r\n\t}\r\n\r\n\t/**\r\n\t * Gets the current state.\r\n\t */\r\n\tgetCurrentState() {\r\n\t\treturn this.currentState ? this.currentState.name : null;\r\n\t}\r\n\r\n\t/**\r\n\t * Updates the current state of the state machine.\r\n\t * \r\n\t * @param {number} pDelta - The delta time since the last update in seconds.\r\n\t */\r\n\tupdate(pDelta) {\r\n\t\tif (this.currentState) {\r\n\t\t\tthis.currentState.update(pDelta);\r\n\t\t}\r\n\t}\r\n}\r\n\r\n/**\r\n * A class representing a state.\r\n */\r\nclass State {\r\n\t/**\r\n\t * Called when entering the state.\r\n\t */\r\n\tenter() { }\r\n\r\n\t/**\r\n\t * Called when executing the state.\r\n\t * \r\n\t * @param {number} pDelta - The delta time since the last update in seconds.\r\n\t */\r\n\tupdate(pDelta) { }\r\n\r\n\t/**\r\n\t * Called when exiting the state.\r\n\t */\r\n\texit() { }\r\n}\r\n\r\nexport { StateManager, State };",
+    "content": "import { Logger } from './vendor/logger.min.mjs';\r\n\r\nclass StateManager {\r\n\t/**\r\n\t * An object containing all the registered states.\r\n\t * \r\n\t * @private\r\n\t * @type {Object<string, State>}\r\n\t */\r\n\tstates = {};\r\n\t/**\r\n\t * The current state of the state machine.\r\n\t * \r\n\t * @private\r\n\t * @type {State|null}\r\n\t */\r\n\tcurrentState = null;\r\n\t/**\r\n\t * The version of the module.\r\n\t */\r\n\tversion = \"VERSION_REPLACE_ME\";\r\n\t/**\r\n\t * Creates a new state machine manager.\r\n\t * \r\n\t * @param {Object<State>} pStates - Array of state objects to register.\r\n\t */\r\n\tconstructor(pStates) {\r\n        /** The logger module this module uses to log errors / logs.\r\n         * @private\r\n         * @type {Object}\r\n         */\r\n        this.logger = new Logger();\r\n        this.logger.registerType('StateManager-Module', '#ff6600');\r\n\t\t// Loop passed states and register them. {'name': foo, 'state': state}\r\n\t\tif (typeof (pStates) === 'object' && !Array.isArray(pStates)) {\r\n\t\t\tfor (const state in pStates) {\r\n\t\t\t\tthis.registerState();\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a new state with the state machine.\r\n\t * \r\n\t * @param {string} pName - The name of the state.\r\n\t * @param {State} pState - The state object.\r\n\t */\r\n\tregisterState(pName, pState) {\r\n\t\tif (typeof (pName) === 'string') {\r\n\t\t\tif (pState instanceof State) {\r\n\t\t\t\tpState.name = pName;\r\n\t\t\t\tthis.states[pName] = pState;\r\n\t\t\t\tpState.manager = this;\r\n\t\t\t} else {\r\n\t\t\t\tthis.logger.prefix('StateManager-Module').error(`${pState} is not a valid state.`);\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\tthis.logger.prefix('StateManager-Module').error('Invalid name for state.');\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Sets the current state of the state machine.\r\n\t * \r\n\t * @param {string} pName - The name of the state to set.\r\n\t * @param {*} pRest - The arguments that were passed when setting this state.\r\n\t */\r\n\tsetState(pName, ...pRest) {\r\n\t\tconst state = this.states[pName];\r\n\t\tif (!state) {\r\n\t\t\tthis.logger.prefix('StateManager-Module').warn(`State ${pName} not found.`);\r\n\t\t\treturn;\r\n\t\t}\r\n\r\n\t\tif (this.currentState) {\r\n\t\t\tthis.currentState.exit();\r\n\t\t}\r\n\r\n\t\tthis.currentState = state;\r\n\t\tthis.currentState.enter(...pRest);\r\n\t}\r\n\r\n\t/**\r\n\t * Gets the current state.\r\n\t */\r\n\tgetCurrentState() {\r\n\t\treturn this.currentState ? this.currentState.name : null;\r\n\t}\r\n\r\n\t/**\r\n\t * Updates the current state of the state machine.\r\n\t * \r\n\t * @param {number} pDelta - The delta time since the last update in seconds.\r\n\t */\r\n\tupdate(pDelta) {\r\n\t\tif (this.currentState) {\r\n\t\t\tthis.currentState.update(pDelta);\r\n\t\t}\r\n\t}\r\n}\r\n\r\n/**\r\n * A class representing a state.\r\n */\r\nclass State {\r\n\t/**\r\n\t * Called when entering the state.\r\n\t */\r\n\tenter() { }\r\n\r\n\t/**\r\n\t * Called when executing the state.\r\n\t * \r\n\t * @param {number} pDelta - The delta time since the last update in seconds.\r\n\t */\r\n\tupdate(pDelta) { }\r\n\r\n\t/**\r\n\t * Called when exiting the state.\r\n\t */\r\n\texit() { }\r\n}\r\n\r\nexport { StateManager, State };",
     "static": true,
     "longname": "C:/Users/jared/Documents/Github/StateManager/src/state-manager.mjs",
     "access": "public",
@@ -583,24 +583,11 @@
     "longname": "src/state-manager.mjs~StateManager",
     "access": "public",
     "export": true,
-    "importPath": "statemanager/src/state-manager.mjs",
+    "importPath": "state-manager",
     "importStyle": "{StateManager}",
-    "description": "A class representing a state machine manager.",
-    "lineNumber": 9,
-    "unknown": [
-      {
-        "tagName": "@class",
-        "tagValue": "StateManager  "
-      },
-      {
-        "tagName": "@license",
-        "tagValue": "StateManager does not have a license at this time. For licensing contact the author"
-      },
-      {
-        "tagName": "@author",
-        "tagValue": "https://github.com/doubleactii"
-      }
-    ],
+    "description": null,
+    "lineNumber": 3,
+    "undocument": true,
     "interface": false
   },
   {
@@ -612,7 +599,7 @@
     "longname": "src/state-manager.mjs~StateManager#states",
     "access": "private",
     "description": "An object containing all the registered states.",
-    "lineNumber": 16,
+    "lineNumber": 10,
     "type": {
       "nullable": null,
       "types": [
@@ -631,7 +618,7 @@
     "longname": "src/state-manager.mjs~StateManager#currentState",
     "access": "private",
     "description": "The current state of the state machine.",
-    "lineNumber": 23,
+    "lineNumber": 17,
     "type": {
       "nullable": null,
       "types": [
@@ -651,7 +638,7 @@
     "longname": "src/state-manager.mjs~StateManager#version",
     "access": "public",
     "description": "The version of the module.",
-    "lineNumber": 27,
+    "lineNumber": 21,
     "type": {
       "types": [
         "*"
@@ -669,7 +656,7 @@
     "longname": "src/state-manager.mjs~StateManager#constructor",
     "access": "public",
     "description": "Creates a new state machine manager.",
-    "lineNumber": 33,
+    "lineNumber": 27,
     "params": [
       {
         "nullable": null,
@@ -692,7 +679,7 @@
     "longname": "src/state-manager.mjs~StateManager#logger",
     "access": "private",
     "description": "The logger module this module uses to log errors / logs.",
-    "lineNumber": 38,
+    "lineNumber": 32,
     "type": {
       "nullable": null,
       "types": [
@@ -713,7 +700,7 @@
     "longname": "src/state-manager.mjs~StateManager#registerState",
     "access": "public",
     "description": "Registers a new state with the state machine.",
-    "lineNumber": 54,
+    "lineNumber": 48,
     "params": [
       {
         "nullable": null,
@@ -749,7 +736,7 @@
     "longname": "src/state-manager.mjs~StateManager#setState",
     "access": "public",
     "description": "Sets the current state of the state machine.",
-    "lineNumber": 74,
+    "lineNumber": 68,
     "params": [
       {
         "nullable": null,
@@ -785,7 +772,7 @@
     "longname": "src/state-manager.mjs~StateManager#getCurrentState",
     "access": "public",
     "description": "Gets the current state.",
-    "lineNumber": 92,
+    "lineNumber": 86,
     "params": [],
     "return": {
       "types": [
@@ -804,7 +791,7 @@
     "longname": "src/state-manager.mjs~StateManager#update",
     "access": "public",
     "description": "Updates the current state of the state machine.",
-    "lineNumber": 101,
+    "lineNumber": 95,
     "params": [
       {
         "nullable": null,
@@ -828,10 +815,10 @@
     "longname": "src/state-manager.mjs~State",
     "access": "public",
     "export": true,
-    "importPath": "statemanager/src/state-manager.mjs",
+    "importPath": "state-manager",
     "importStyle": "{State}",
     "description": "A class representing a state.",
-    "lineNumber": 111,
+    "lineNumber": 105,
     "interface": false
   },
   {
@@ -845,7 +832,7 @@
     "longname": "src/state-manager.mjs~State#enter",
     "access": "public",
     "description": "Called when entering the state.",
-    "lineNumber": 115,
+    "lineNumber": 109,
     "params": [],
     "return": null
   },
@@ -860,7 +847,7 @@
     "longname": "src/state-manager.mjs~State#update",
     "access": "public",
     "description": "Called when executing the state.",
-    "lineNumber": 122,
+    "lineNumber": 116,
     "params": [
       {
         "nullable": null,
@@ -886,13 +873,13 @@
     "longname": "src/state-manager.mjs~State#exit",
     "access": "public",
     "description": "Called when exiting the state.",
-    "lineNumber": 127,
+    "lineNumber": 121,
     "params": [],
     "return": null
   },
   {
     "kind": "index",
-    "content": "# StateManager\r\nA simple state machine manager and state class that can be used in JavaScript games.\r\n\r\n# Usage\r\nImport StateManager and State:\r\n```js\r\nimport { StateManager, State } from './state-manager.min.mjs';\r\n```\r\nCreate your own states by extending the State class:\r\n```js\r\nclass IdleState extends State {\r\n  enter() {\r\n    console.log('Entering IdleState');\r\n  }\r\n\r\n  update(pDelta) {\r\n    console.log(`Updating IdleState with delta ${pDelta}`);\r\n  }\r\n\r\n  exit() {\r\n    console.log('Exiting IdleState');\r\n  }\r\n}\r\n```\r\nCreate a new StateManager instance and register your states:\r\n```js\r\nconst stateManager = new StateManager();\r\nstateManager.registerState('idle', new IdleState());\r\n```\r\nSet the initial state:\r\n```js\r\nstateManager.setState('idle');\r\n```\r\nUpdate the state machine in your game loop:\r\n```js\r\nfunction gameLoop() {\r\n  // caclulate delta and pass it to the state manager's update method\r\n  stateManager.update(delta);\r\n  requestAnimationFrame(gameLoop);\r\n}\r\n```\r\n# API\r\n# StateManager  \r\n\r\n## new StateManager(pStates)  \r\nCreates a new state machine manager.\r\n```js\r\nimport { StateManager, State } from './state-manager.min.mjs';\r\nclass FooState extends State {\r\n  // ...\r\n}\r\nclass BarState extends State {\r\n  // ...\r\n}\r\nconst stateInfo = [\r\n  {name: 'foo', state: new FooState()},\r\n  {name: 'bar', state: new BarState()}\r\n];\r\n\r\nconst stateManager = new StateManager(stateInfo);\r\n// Now able to change to those states\r\nstateManager.setState('foo');\r\nstateManager.setState('bar');\r\n```\r\n\r\n- pStates {Object<State>} - An object containing all the states to be registered.\r\n## registerState(pName, pState)  \r\nRegisters a new state with the state machine.\r\n\r\n- pName {string} - The name of the state.\r\n- pState {State} - The state object.\r\n```js\r\nimport { StateManager, State } from './state-manager.min.mjs';\r\nconst stateManager = new StateManager();\r\nclass IdleState extends State {\r\n  // ...\r\n}\r\nstateManager.registerState('idle', new IdleState());\r\n```\r\n\r\n## setState(pName, pArg, pArg2, ..., pArgN)  \r\nSets the current state of the state machine.\r\n\r\n- pName {string} - The name of the state to set.\r\n- pArg {*} - Argument(s) to pass to the enter method of the state.\r\n```js\r\nstateManager.setState('idle');\r\n// or with arguments\r\nstateManager.setState('idle', 1, 2, 3);\r\n```\r\n## getCurrentState()  \r\nGets the current state.\r\n\r\n```js\r\nstateManager.getCurrentState(); // 'idle'\r\n```\r\n\r\n## update(pDelta)  \r\nUpdates the current state of the state machine.\r\n\r\n- pDelta {number} - The delta time since the last update in seconds.\r\n```js\r\nstateManager.update(delta);\r\n```\r\n\r\n# State\r\nA class representing a state.\r\n\r\n## manager\r\nReference to the manager that is managing this state. \r\nWill be **`undefined`** if the state is unregistered.\r\n```js\r\nclass IdleState extends State {\r\n  // ...\r\n}\r\nconst idle = new IdleState();\r\nidle.manager // manager that registered this state.\r\n```\r\n\r\n## enter()\r\nCalled when entering the state.\r\n```js\r\nclass IdleState extends State {\r\n  enter() {\r\n    console.log('Entering IdleState');\r\n  }\r\n}\r\n```\r\n\r\n## update(pDelta)\r\nCalled when executing the state. This is automatically called when the state manager updates.\r\n\r\n- pDelta {number} - The delta time since the last update in seconds.\r\n```js\r\nclass IdleState extends State {\r\n  update(pDelta) {\r\n    console.log(`Updating IdleState with delta ${pDelta}`);\r\n  }\r\n}\r\n```\r\n\r\n## exit()\r\nCalled when exiting the state.\r\n```js\r\nclass IdleState extends State {\r\n  exit() {\r\n    console.log('Exiting IdleState');\r\n  }\r\n}\r\n```\r\n\r\n# Arguments can be passed when setting the state\r\n\r\n```js\r\nimport { StateManager, State } from './state-manager.min.mjs';\r\nconst stateManager = new StateManager();\r\n\r\nclass IdleState extends State {\r\n  enter(pParam) {\r\n    console.log(pParam); // 'foo';\r\n  }\r\n}\r\n\r\nconst idle = new IdleState();\r\nstateManager.registerState('idle', idle);\r\nstateManager.setState('idle', 'foo');\r\n\r\n\r\n```\r\n\r\n# License\r\nStateManager does not have a license at this time. For licensing contact the author.\r\n\r\n# Author\r\nStateManager was created by doubleactii.",
+    "content": "# StateManager\r\nA simple state machine manager and state class that can be used in JavaScript games.\r\n\r\n## Installation\r\n\r\n### ES Module\r\n\r\n```js\r\nimport { StateManager, State } from './state-manager.mjs';\r\n```\r\n\r\n### IIFE (Immediately Invoked Function Expression)\r\n\r\n```js\r\n<script src=\"state-manager.js\"></script>;\r\n// ...\r\nwindow.StateManagerBundle.StateManager;\r\nwindow.StateManagerBundle.State;\r\n```\r\n\r\n### CommonJS (CJS) Module\r\n\r\n```js\r\nconst { StateManager, State } = require('./state-manager.cjs.js');\r\n```\r\n\r\n# Usage\r\nImport StateManager and State:\r\n```js\r\nimport { StateManager, State } from './state-manager.mjs';\r\n```\r\nCreate your own states by extending the State class:\r\n```js\r\nclass IdleState extends State {\r\n  enter() {\r\n    console.log('Entering IdleState');\r\n  }\r\n\r\n  update(pDelta) {\r\n    console.log(`Updating IdleState with delta ${pDelta}`);\r\n  }\r\n\r\n  exit() {\r\n    console.log('Exiting IdleState');\r\n  }\r\n}\r\n```\r\nCreate a new StateManager instance and register your states:\r\n```js\r\nconst stateManager = new StateManager();\r\nstateManager.registerState('idle', new IdleState());\r\n```\r\nSet the initial state:\r\n```js\r\nstateManager.setState('idle');\r\n```\r\nUpdate the state machine in your game loop:\r\n```js\r\nfunction gameLoop() {\r\n  // caclulate delta and pass it to the state manager's update method\r\n  stateManager.update(delta);\r\n  requestAnimationFrame(gameLoop);\r\n}\r\n```\r\n# API\r\n# StateManager  \r\n\r\n## new StateManager(pStates)  \r\nCreates a new state machine manager.\r\n```js\r\nimport { StateManager, State } from './state-manager.mjs';\r\nclass FooState extends State {\r\n  // ...\r\n}\r\nclass BarState extends State {\r\n  // ...\r\n}\r\nconst stateInfo = [\r\n  {name: 'foo', state: new FooState()},\r\n  {name: 'bar', state: new BarState()}\r\n];\r\n\r\nconst stateManager = new StateManager(stateInfo);\r\n// Now able to change to those states\r\nstateManager.setState('foo');\r\nstateManager.setState('bar');\r\n```\r\n\r\n- pStates {Object<State>} - An object containing all the states to be registered.\r\n## registerState(pName, pState)  \r\nRegisters a new state with the state machine.\r\n\r\n- pName {string} - The name of the state.\r\n- pState {State} - The state object.\r\n```js\r\nimport { StateManager, State } from './state-manager.mjs';\r\nconst stateManager = new StateManager();\r\nclass IdleState extends State {\r\n  // ...\r\n}\r\nstateManager.registerState('idle', new IdleState());\r\n```\r\n\r\n## setState(pName, pArg, pArg2, ..., pArgN)  \r\nSets the current state of the state machine.\r\n\r\n- pName {string} - The name of the state to set.\r\n- pArg {*} - Argument(s) to pass to the enter method of the state.\r\n```js\r\nstateManager.setState('idle');\r\n// or with arguments\r\nstateManager.setState('idle', 1, 2, 3);\r\n```\r\n## getCurrentState()  \r\nGets the current state.\r\n\r\n```js\r\nstateManager.getCurrentState(); // 'idle'\r\n```\r\n\r\n## update(pDelta)  \r\nUpdates the current state of the state machine.\r\n\r\n- pDelta {number} - The delta time since the last update in seconds.\r\n```js\r\nstateManager.update(delta);\r\n```\r\n\r\n# State\r\nA class representing a state.\r\n\r\n## manager\r\nReference to the manager that is managing this state. \r\nWill be **`undefined`** if the state is unregistered.\r\n```js\r\nclass IdleState extends State {\r\n  // ...\r\n}\r\nconst idle = new IdleState();\r\nidle.manager // manager that registered this state.\r\n```\r\n\r\n## enter()\r\nCalled when entering the state.\r\n```js\r\nclass IdleState extends State {\r\n  enter() {\r\n    console.log('Entering IdleState');\r\n  }\r\n}\r\n```\r\n\r\n## update(pDelta)\r\nCalled when executing the state. This is automatically called when the state manager updates.\r\n\r\n- pDelta {number} - The delta time since the last update in seconds.\r\n```js\r\nclass IdleState extends State {\r\n  update(pDelta) {\r\n    console.log(`Updating IdleState with delta ${pDelta}`);\r\n  }\r\n}\r\n```\r\n\r\n## exit()\r\nCalled when exiting the state.\r\n```js\r\nclass IdleState extends State {\r\n  exit() {\r\n    console.log('Exiting IdleState');\r\n  }\r\n}\r\n```\r\n\r\n# Arguments can be passed when setting the state\r\n\r\n```js\r\nimport { StateManager, State } from './state-manager.mjs';\r\nconst stateManager = new StateManager();\r\n\r\nclass IdleState extends State {\r\n  enter(pParam) {\r\n    console.log(pParam); // 'foo';\r\n  }\r\n}\r\n\r\nconst idle = new IdleState();\r\nstateManager.registerState('idle', idle);\r\nstateManager.setState('idle', 'foo');\r\n\r\n\r\n```\r\n\r\n# Author\r\nStateManager was created by doubleactii.\r\n\r\n### Global Dependency\r\n\r\nStateManager relies on the `VYLO` variable being globally accessible.",
     "longname": "C:\\Users\\jared\\Documents\\Github\\StateManager\\README.md",
     "name": "./README.md",
     "static": true,
@@ -900,7 +887,7 @@
   },
   {
     "kind": "packageJSON",
-    "content": "{\r\n  \"name\": \"statemanager\",\r\n  \"version\": \"1.0.0\",\r\n  \"description\": \"A class representing a state machine manager.\",\r\n  \"main\": \"dist/state-manager.min.mjs\",\r\n  \"scripts\": {\r\n    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\",\r\n    \"build\": \"npx webpack && npm run build:minify && node add-version-script.js && node add-banner-script.js\",\r\n    \"build:minify\": \"uglifyjs dist/state-manager.min.mjs -m -c --comments -o dist/state-manager.min.mjs\",\r\n    \"build:prod\": \"npx webpack --mode production && npm run build:minify && node add-version-script.js && node add-banner-script.js && npm run build:docs\",\r\n    \"build:docs\": \"esdoc -c esdoc.json\"\r\n  },\r\n  \"keywords\": [],\r\n  \"author\": \"https://github.com/doubleactii\",\r\n  \"license\": \"SEE LICENSE IN LICENSE.md\",\r\n  \"repository\": {\r\n    \"type\": \"git\",\r\n    \"url\": \"https://github.com/EvitcaStudio/StateManager.git\"\r\n  },\r\n  \"bugs\": {\r\n    \"url\": \"https://github.com/EvitcaStudio/StateManager/issues\"\r\n  },\r\n  \"homepage\": \"https://github.com/EvitcaStudio/StateManager#readme\",\r\n  \"devDependencies\": {\r\n    \"esdoc\": \"^1.1.0\",\r\n    \"esdoc-ecmascript-proposal-plugin\": \"^1.0.0\",\r\n    \"esdoc-standard-plugin\": \"^1.0.0\",\r\n    \"uglify-js\": \"^3.17.4\",\r\n    \"webpack\": \"^5.89.0\",\r\n    \"webpack-cli\": \"^5.1.4\"\r\n  }\r\n}\r\n",
+    "content": "{\r\n  \"name\": \"state-manager\",\r\n  \"version\": \"1.0.0\",\r\n  \"description\": \"A class representing a state machine manager.\",\r\n  \"main\": \"src/state-manager.mjs\",\r\n  \"scripts\": {\r\n    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\",\r\n    \"build:rollup\": \"npx rollup -c --failAfterWarnings\",\r\n    \"build:docs\": \"esdoc -c esdoc.json\",\r\n    \"build:dist\": \"npm run build:rollup && npm run build:docs\"\r\n  },\r\n  \"keywords\": [],\r\n  \"author\": \"https://github.com/doubleactii\",\r\n  \"license\": \"SEE LICENSE IN LICENSE.md\",\r\n  \"repository\": {\r\n    \"type\": \"git\",\r\n    \"url\": \"https://github.com/EvitcaStudio/StateManager\"\r\n  },\r\n  \"bugs\": {\r\n    \"url\": \"https://github.com/EvitcaStudio/StateManager/issues\"\r\n  },\r\n  \"homepage\": \"https://github.com/EvitcaStudio/StateManager#readme\",\r\n  \"devDependencies\": {\r\n    \"@rollup/plugin-babel\": \"^6.0.4\",\r\n    \"@rollup/plugin-terser\": \"^0.4.4\",\r\n    \"esdoc\": \"^1.1.0\",\r\n    \"esdoc-ecmascript-proposal-plugin\": \"^1.0.0\",\r\n    \"esdoc-standard-plugin\": \"^1.0.0\",\r\n    \"rollup\": \"^4.14.1\",\r\n    \"rollup-plugin-banner2\": \"^1.2.3\",\r\n    \"rollup-plugin-cleandir\": \"^2.0.0\",\r\n    \"rollup-plugin-replace\": \"^2.2.0\"\r\n  }\r\n}\r\n",
     "longname": "C:\\Users\\jared\\Documents\\Github\\StateManager\\package.json",
     "name": "package.json",
     "static": true,
